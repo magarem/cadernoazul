@@ -1,0 +1,45 @@
+<fieldset class="_module _aligned" id="fieldset-{% if stacked_prefix %}{{ stacked_prefix }}-{% endif %}{{ forloop.counter }}" style="background:transparent">
+  <div class="fields {% if not errors %}{{ fieldset.classes }}{% endif %}">
+     <div class="row">
+        <div class="control-group  field-texto">
+            <div class="col-md-12 form-group ">
+
+               <div class="controls col-md-9">
+                  <textarea
+                     class="form-control vLargeTextField"
+                     cols="40"
+                     id="id_texto"
+                     name="texto"
+                     placeholder="Texto"
+                     required="required"
+                     rows="10"
+                     title="">
+                   </textarea>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+     </fieldset>
+<div class="row"><div class="control-group  field-classificacao">
+
+        <div class="col-md-12 form-group ">
+            <div class="control-label col-md-3">
+                <label class="required" for="id_classificacao">Classificacao:</label>
+            </div>
+
+            <div class="controls col-md-9">
+
+                    <select class="form-control" id="id_classificacao" name="classificacao" required="required" title="">
+<option value="0" selected="selected">Normal</option>
+<option value="1">Atenção</option>
+<option value="2">Urgente</option>
+</select>
+
+
+
+            </div>
+
+        </div>
+
+</div></div>

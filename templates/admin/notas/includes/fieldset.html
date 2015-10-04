@@ -1,0 +1,21 @@
+{% load bootstrapped_goodies_tags %}
+<ul class="nav nav-tabs">
+  <li class="active"><a data-toggle="tab" href="#tab1">Texto</a></li>
+  <li><a data-toggle="tab" href="#tab2">Marcadores</a></li>
+  <li><a data-toggle="tab" href="#tab3">Permissões</a></li>
+</ul>
+
+<div class="tab-content">
+  <div id="tab1" class="tab-pane fade in active">
+    <br>
+    {% include "admin/notas/includes/tab1.html" %}
+  </div>
+  <div id="tab2" class="tab-pane fade">
+    <br>
+    {% include "admin/notas/includes/tab2.html" %}
+  </div>
+  <div id="tab3" class="tab-pane fade">
+    <br>
+    {% include "admin/notas/includes/tab3.html" %}
+  </div>
+</div>

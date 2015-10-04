@@ -1,10 +1,12 @@
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
 class Registro(models.Model):
 
     #informações do proprietário
-    dono = models.ForeignKey('auth.User')
+    #dono = models.ForeignKey('auth.User')
+    dono = models.OneToOneField(settings.AUTH_USER_MODEL)
     grupo = models.ForeignKey("auth.Group")
 
     #Datas
