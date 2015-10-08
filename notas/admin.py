@@ -4,32 +4,37 @@ from django.db.models import Q
 from sorl.thumbnail.admin import AdminImageMixin
 from django.utils.html import format_html
 
-class preAdmin():
+class PreMarcador(admin.ModelAdmin):
+
+    def save_model(self, request, obj, form, change):
+        obj.dono = request.user.id
+        obj.save()
+
+    def get_queryset(self, request):
+        qs = super(PreMarcador, self).get_queryset(request)
+        if request.user.is_superuser:
+           return qs
+
+        return qs.filter(dono=request.user.id)
+
+
+class PreAdmin(AdminImageMixin):
 
     def save_model(self, request, obj, form, change):
 
         if obj.data_criado is None:
            obj.dono = request.user.id
-           #obj.dono_nome = request.user.username
-           #obj.grupo = request.user.groups.all()[0].id
-           #obj.grupo = 1
            obj.save()
         else:
            obj.save()
-           #obj.user = request.user.id
-           #obj.grupo = request.user.groups.all()files
 
     def get_queryset(self, request):
-        qs = super(preAdmin, self).get_queryset(request)
+        qs = super(PreAdmin, self).get_queryset(request)
 
         if request.user.is_superuser:
            return qs
 
         return qs.filter(Q(dono=request.user.id) | (Q(acesso_grupo__in=[2,3]) & Q(grupo__in = request.user.groups.all())))
-
-
-#class NotaAdmin(preAdmin, admin.ModelAdmin):
-#    pass
 
 class NotaFileInline(admin.TabularInline):
 
@@ -37,8 +42,7 @@ class NotaFileInline(admin.TabularInline):
     extra = 1
 
 
-class NotaAdmin(preAdmin, admin.ModelAdmin):
-
+class NotaAdmin(PreAdmin, admin.ModelAdmin):
 
     def classi(self, obj):
         if (obj.classificacao == 0):
@@ -48,27 +52,24 @@ class NotaAdmin(preAdmin, admin.ModelAdmin):
         if (obj.classificacao == 2):
             return format_html('<span style="color: red;"><b>Urgente!</b></span>')
 
-
     classi.allow_tags = True
     classi.admin_order_field = 'classificacao'
     classi.short_description = 'Classificação'
 
     #list_display = ('texto_titulo', 'thumb', 'data_criado', 'data_alterado', 'classificacao')
     list_display = ('texto_titulo', 'mini', 'get_data_criado', 'classi')
-    inlines = [NotaFileInline]
+    inlines = [NotaFileInline, ]
 
     def get_data_criado(self, obj):
             return obj.data_criado
     get_data_criado.short_description = 'Criado'
     get_data_criado.admin_order_field = 'data_criado'
 
-
     def get_marcadores(self, obj):
             return obj.marcadores.all()
     get_marcadores.short_description = 'Criado'
     get_marcadores.admin_order_field = 'data_criado'
 
-
 # Register your models here.
 admin.site.register(Nota, NotaAdmin)
-admin.site.register(Marcador)
+admin.site.register(Marcador, PreMarcador)

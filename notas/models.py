@@ -5,17 +5,6 @@ from django.utils.timezone import now
 from sorl.thumbnail import ImageField, get_thumbnail
 from django.conf import settings
 
-class Marcador(models.Model):
-    #id do registro
-    nome = models.CharField(max_length=50, unique=True)
-
-    class Meta:
-        verbose_name = 'marcador'
-        verbose_name_plural = 'marcadores'
-        ordering = ['nome']
-
-    def __str__(self):
-        return self.nome
 
 class Registro(models.Model):
     #informações do proprietário
@@ -30,7 +19,6 @@ class Registro(models.Model):
     data_criado = models.DateTimeField('date created', blank=True, null=True)
     data_alterado = models.DateTimeField('date updated', blank=True, null=True)
 
-    marcadores = models.ManyToManyField(Marcador, blank=True)
     #Controle de acesso
     visibilidade_ops = (
         (0, '--'),
@@ -61,12 +49,27 @@ class Registro(models.Model):
         self.data_alterado = now()
         super(Registro, self).save(*args, **kwargs)
 
+class Marcador(models.Model):
+    #id do registro
+    dono = models.IntegerField(blank=True, null=True)
+    nome = models.CharField(max_length=50, unique=True)
+
+    class Meta:
+        verbose_name = 'marcador'
+        verbose_name_plural = 'marcadores'
+        ordering = ['nome']
+
+    def __str__(self):
+        return self.nome
+
 class Nota(Registro):
 
     #Texto da nota
     texto = models.TextField()
     #imagem de destaque
-    imagem = models.ImageField()
+    imagem = ImageField(blank=True, null=True)
+
+    marcador = models.ManyToManyField(Marcador)
 
     def __str__(self):
         return self.texto
@@ -84,6 +87,7 @@ class Nota(Registro):
             return u"None"
     mini.short_description = 'Imagem'
     mini.allow_tags = True
+
 
 class NotaFile(models.Model):
 
