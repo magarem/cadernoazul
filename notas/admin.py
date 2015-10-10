@@ -60,6 +60,22 @@ class NotaAdmin(PreAdmin, admin.ModelAdmin):
     list_display = ('texto_titulo', 'mini', 'get_data_criado', 'classi')
     inlines = [NotaFileInline, ]
 
+    fieldsets = (
+            ('Texto', {
+                'classes': ('collapse',),
+                'fields': ('texto', 'classificacao', 'tags')
+            }),
+            ('Imagem e Anexos', {
+                'classes': ('collapse',),
+                'fields': ('imagem',)
+            }),
+            ('Controle', {
+                'classes': ('collapse',),
+                'fields': ('dono', 'grupo', 'acesso_grupo', 'acesso_outros')
+            }),
+
+        )
+
     def get_data_criado(self, obj):
             return obj.data_criado
     get_data_criado.short_description = 'Criado'

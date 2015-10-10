@@ -4,7 +4,8 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now
 from sorl.thumbnail import ImageField, get_thumbnail
 from django.conf import settings
-
+from tagging.fields import TagField
+from tagging.models import Tag
 
 class Registro(models.Model):
     #informações do proprietário
@@ -68,8 +69,8 @@ class Nota(Registro):
     texto = models.TextField()
     #imagem de destaque
     imagem = ImageField(blank=True, null=True)
-
-    marcador = models.ManyToManyField(Marcador)
+    tags = TagField()
+    #marcador = models.ManyToManyField(Marcador)
 
     def __str__(self):
         return self.texto
@@ -88,6 +89,8 @@ class Nota(Registro):
     mini.short_description = 'Imagem'
     mini.allow_tags = True
 
+    def get_tags(self):
+        return Tag.objects.get_for_object(self)
 
 class NotaFile(models.Model):
 
